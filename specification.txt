@@ -1,0 +1,68 @@
+Got it 👍 Let’s set a **simple and clean specification** for your **UART Protocol Verification RTL Project**.
+We’ll keep it minimal but realistic so you can implement and verify step by step.
+
+---
+
+## 📌 UART Protocol Specification (Simplified)
+
+### 1. **Baud Rate**
+
+* **115200 bps** (commonly used, but you can parameterize it).
+* Clock frequency: **50 MHz** (typical FPGA board clock).
+
+### 2. **Frame Format**
+
+* **Start bit:** 1 (logic 0).
+* **Data bits:** 8.
+* **Parity:** None.
+* **Stop bit:** 1 (logic 1).
+* **Total frame length:** 10 bits (1 start + 8 data + 1 stop).
+
+### 3. **Transmitter (TX)**
+
+* Inputs:
+
+  * `clk`, `reset`, `tx_start`, `tx_data[7:0]`.
+* Outputs:
+
+  * `tx_serial`, `tx_busy`.
+* Behavior:
+
+  * On `tx_start`, transmit frame (start → data bits LSB first → stop).
+  * `tx_busy` stays high until transmission is done.
+
+### 4. **Receiver (RX)**
+
+* Inputs:
+
+  * `clk`, `reset`, `rx_serial`.
+* Outputs:
+
+  * `rx_data[7:0]`, `rx_done`.
+* Behavior:
+
+  * Detect start bit (falling edge).
+  * Sample data bits in the middle of each bit period.
+  * After stop bit, assert `rx_done` with valid `rx_data`.
+
+### 5. **Error Handling (Optional for simplicity)**
+
+* Ignore framing error / parity error for now.
+* Focus only on **correct data transmission & reception**.
+
+### 6. **Verification Scope**
+
+* Write a **SystemVerilog Testbench** that:
+
+  * Sends multiple random bytes from TX → RX.
+  * Checks received data matches sent data.
+  * Use **\$display / assertions (SVA)** for pass/fail.
+  * Optionally log waveforms (`.vcd` or `.wlf`).
+
+---
+
+✅ This is a **simple UART 8N1 specification** (8 data bits, No parity, 1 stop bit) – widely used and easy to implement/verify.
+
+---
+
+Do you want me to **(a)** write the RTL for UART TX + RX first, or **(b)** start directly with the **verification plan/testbench** since you are focusing on verification?
